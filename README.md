@@ -1,9 +1,11 @@
 # golicense - Go Binary OSS License Scanner
 
-golicense is a tool that scans [compiled Go binaries](https://golang.org/)
-and can output all the dependencies, their versions, and their respective
-licenses (if known). golicense only works with Go binaries compiled using
-Go modules for dependency management.
+golicense is a highly modified version of 
+[mitchellih/golicense](https://github.com/mitchellh/golicense) that scans 
+[compiled Go binaries](https://golang.org/) and can output all the dependencies,
+their versions, and their respective licenses (if known). This version of
+golicense scans project directories for `go.mod` files instead of scanning
+the final binary or binaries.
 
 golicense determines the dependency list quickly and with exact accuracy
 since it uses metadata from the Go compiler to determine the _exact_ set of
@@ -18,11 +20,6 @@ companies such as [FOSSA](https://fossa.io/) or
 which provide hundreds of additional features related to open source
 compliance.
 
-**Warning:** The binary itself must be trusted and untampered with to provide
-accurate results. It is trivial to modify the dependency information of a
-compiled binary. This is the opposite side of the same coin with source-based
-dependency analysis where the source must not be tampered.
-
 ## Features
 
   * List dependencies and their associated licenses
@@ -31,20 +28,13 @@ dependency analysis where the source must not be tampered.
   * Manually specify overrides for specific dependencies if the detection
     is incorrect.
 
-## Example
-
-The example below runs `golicense` against itself from a recent build.
-
-![golicense Example](https://user-images.githubusercontent.com/1299/48667166-468d1080-ea85-11e8-8005-5a44c6a0d10a.gif)
-
 ## Installation
 
 To install `golicense`, download the appropriate release for your platform
-from the [releases page](https://github.com/mitchellh/golicense/releases).
+from the [releases page](https://github.com/hpapaxen/golicense/releases).
 
-You can also compile from source using Go 1.11 or later using standard
-`go build`. Please ensure that Go modules are enabled (GOPATH not set or
-`GO111MODULE` set to "on").
+You can also compile from source using Go 1.17 or later using standard
+`go build`.
 
 ## Usage
 
@@ -54,8 +44,8 @@ form, a configuration file can be given to specify an allow/deny list of
 licenses and more.
 
 ```
-$ golicense [flags] [BINARY]
-$ golicense [flags] [CONFIG] [BINARY]
+$ golicense [flags] [DIRECTORY]
+$ golicense [flags] [CONFIG] [DIRECTORY]
 ```
 
 You may also pass mutliple binaries (but only if you are providing a CONFIG).

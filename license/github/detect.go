@@ -3,12 +3,13 @@ package github
 import (
 	"encoding/base64"
 	"fmt"
+	"github.com/go-enry/go-license-detector/v4/licensedb"
+	"github.com/go-enry/go-license-detector/v4/licensedb/api"
 
+	"github.com/go-enry/go-license-detector/v4/licensedb/filer"
 	"github.com/google/go-github/v18/github"
+	"github.com/hpapaxen/golicense/license"
 	"github.com/mitchellh/go-spdx"
-	"github.com/mitchellh/golicense/license"
-	"gopkg.in/src-d/go-license-detector.v2/licensedb"
-	"gopkg.in/src-d/go-license-detector.v2/licensedb/filer"
 )
 
 // detect uses go-license-detector as a fallback.
@@ -19,10 +20,10 @@ func detect(rl *github.RepositoryLicense) (*license.License, error) {
 	}
 
 	// Find the highest matching license
-	var highest float32
+	var highest api.Match
 	current := ""
 	for id, v := range ms {
-		if v > 0.90 && v > highest {
+		if v.Confidence > 0.90 && v.Confidence > highest.Confidence {
 			highest = v
 			current = id
 		}
@@ -48,6 +49,10 @@ func detect(rl *github.RepositoryLicense) (*license.License, error) {
 // from the github.RepositoryLicense structure.
 type filerImpl struct {
 	License *github.RepositoryLicense
+}
+
+func (f *filerImpl) PathsAreAlwaysSlash() bool {
+	return true
 }
 
 func (f *filerImpl) ReadFile(name string) ([]byte, error) {

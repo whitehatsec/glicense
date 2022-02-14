@@ -3,7 +3,7 @@ package config
 import (
 	"testing"
 
-	"github.com/mitchellh/golicense/license"
+	"github.com/hpapaxen/golicense/license"
 	"github.com/stretchr/testify/require"
 )
 

@@ -6,26 +6,28 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 
 	"github.com/fatih/color"
 	"github.com/google/go-github/v18/github"
-	"github.com/rsc/goversion/version"
 	"golang.org/x/oauth2"
 
-	"github.com/mitchellh/golicense/config"
-	"github.com/mitchellh/golicense/license"
-	githubFinder "github.com/mitchellh/golicense/license/github"
-	"github.com/mitchellh/golicense/license/golang"
-	"github.com/mitchellh/golicense/license/gopkg"
-	"github.com/mitchellh/golicense/license/mapper"
-	"github.com/mitchellh/golicense/license/resolver"
-	"github.com/mitchellh/golicense/module"
+	"github.com/hpapaxen/golicense/config"
+	"github.com/hpapaxen/golicense/license"
+	githubFinder "github.com/hpapaxen/golicense/license/github"
+	"github.com/hpapaxen/golicense/license/golang"
+	"github.com/hpapaxen/golicense/license/gopkg"
+	"github.com/hpapaxen/golicense/license/mapper"
+	"github.com/hpapaxen/golicense/license/resolver"
+	"github.com/hpapaxen/golicense/module"
+	"golang.org/x/mod/modfile"
 )
 
 const (
 	EnvGitHubToken = "GITHUB_TOKEN"
+	goMod          = "go.mod"
 )
 
 func main() {
@@ -49,16 +51,16 @@ func realMain() int {
 	args := flags.Args()
 	if len(args) == 0 {
 		fmt.Fprintf(os.Stderr, color.RedString(
-			"❗️ Path to file to analyze expected.\n\n"))
+			"❗️ Path to directory to analyze expected.\n\n"))
 		printHelp(flags)
 		return 1
 	}
 
 	// Determine the exe path and parse the configuration if given.
 	var cfg config.Config
-	exePaths := args[:1]
+	dirPaths := args[:1]
 	if len(args) > 1 {
-		exePaths = args[1:]
+		dirPaths = args[1:]
 
 		c, err := config.ParseFile(args[0])
 		if err != nil {
@@ -72,35 +74,28 @@ func realMain() int {
 	}
 
 	allMods := map[module.Module]struct{}{}
-	for _, exePath := range exePaths {
+	for _, dirPath := range dirPaths {
 		// Read the dependencies from the binary itself
-		vsn, err := version.ReadExe(exePath)
+		bts, err := os.ReadFile(filepath.Join(dirPath, goMod))
 		if err != nil {
 			fmt.Fprintf(os.Stderr, color.RedString(fmt.Sprintf(
 				"❗️ Error reading %q: %s\n", args[0], err)))
 			return 1
 		}
 
-		if vsn.ModuleInfo == "" {
-			// ModuleInfo empty means that the binary didn't use Go modules
-			// or it could mean that a binary has no dependencies. Either way
-			// we error since we can't be sure.
-			fmt.Fprintf(os.Stderr, color.YellowString(fmt.Sprintf(
-				"⚠️  %q ⚠️\n\n"+
-					"This executable was compiled without using Go modules or has \n"+
-					"zero dependencies. golicense considers this an error (exit code 1).\n", exePath)))
+		file, err := modfile.Parse(goMod, bts, nil)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, color.RedString(fmt.Sprintf(
+				"❗️ Error reading %q: %s\n", args[0], err)))
 			return 1
 		}
 
-		// From the raw module string from the binary, we need to parse this
-		// into structured data with the module information.
-		mods, err := module.ParseExeData(vsn.ModuleInfo)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, color.RedString(fmt.Sprintf(
-				"❗️ Error parsing dependencies: %s\n", err)))
-			return 1
-		}
-		for _, mod := range mods {
+		for _, require := range file.Require {
+			if require.Indirect {
+				continue
+			}
+
+			mod := toModule(require)
 			allMods[mod] = struct{}{}
 		}
 	}
@@ -193,6 +188,13 @@ func realMain() int {
 	return termOut.ExitCode()
 }
 
+func toModule(require *modfile.Require) module.Module {
+	return module.Module{
+		Path:    require.Mod.Path,
+		Version: require.Mod.Version,
+	}
+}
+
 func printHelp(fs *flag.FlagSet) {
 	fmt.Fprintf(os.Stderr, strings.TrimSpace(help)+"\n\n", os.Args[0])
 	fs.PrintDefaults()
@@ -209,7 +211,7 @@ all the licenses of dependencies, or a configuration file and a binary
 which also notes which licenses are allowed among other settings.
 
 For full help text, see the README in the GitHub repository:
-http://github.com/mitchellh/golicense
+http://github.com/hpapaxen/golicense
 
 Flags:
 

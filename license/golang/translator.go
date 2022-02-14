@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/mitchellh/golicense/module"
+	"github.com/hpapaxen/golicense/module"
 )
 
 type Translator struct{}

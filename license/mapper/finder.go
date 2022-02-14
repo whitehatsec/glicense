@@ -3,10 +3,10 @@ package mapper
 import (
 	"context"
 	"fmt"
-
 	"github.com/mitchellh/go-spdx"
-	"github.com/mitchellh/golicense/license"
-	"github.com/mitchellh/golicense/module"
+
+	"github.com/hpapaxen/golicense/license"
+	"github.com/hpapaxen/golicense/module"
 )
 
 // Finder implements license.Finder and sets the license type based on the

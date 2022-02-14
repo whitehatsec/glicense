@@ -12,9 +12,9 @@ import (
 	"github.com/gosuri/uilive"
 	"golang.org/x/crypto/ssh/terminal"
 
-	"github.com/mitchellh/golicense/config"
-	"github.com/mitchellh/golicense/license"
-	"github.com/mitchellh/golicense/module"
+	"github.com/hpapaxen/golicense/config"
+	"github.com/hpapaxen/golicense/license"
+	"github.com/hpapaxen/golicense/module"
 )
 
 // TermOutput is an Output implementation that outputs to the terminal.
