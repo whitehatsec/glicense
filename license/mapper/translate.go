@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/hpapaxen/golicense/module"
+	"github.com/hpapaxen/glicense/module"
 )
 
 type Translator struct {

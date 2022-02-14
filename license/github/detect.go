@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-enry/go-license-detector/v4/licensedb/filer"
 	"github.com/google/go-github/v18/github"
-	"github.com/hpapaxen/golicense/license"
+	"github.com/hpapaxen/glicense/license"
 	"github.com/mitchellh/go-spdx"
 )
 

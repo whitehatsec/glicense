@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/hpapaxen/golicense/license"
-	"github.com/hpapaxen/golicense/module"
+	"github.com/hpapaxen/glicense/license"
+	"github.com/hpapaxen/glicense/module"
 )
 
 // Output represents the output format for the progress and completion

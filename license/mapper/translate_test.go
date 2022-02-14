@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/hpapaxen/golicense/module"
+	"github.com/hpapaxen/glicense/module"
 	"github.com/stretchr/testify/require"
 )
 

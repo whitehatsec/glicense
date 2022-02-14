@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/mitchellh/go-spdx"
 
-	"github.com/hpapaxen/golicense/license"
-	"github.com/hpapaxen/golicense/module"
+	"github.com/hpapaxen/glicense/license"
+	"github.com/hpapaxen/glicense/module"
 )
 
 // Finder implements license.Finder and sets the license type based on the

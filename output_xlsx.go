@@ -7,9 +7,9 @@ import (
 	"sync"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
-	"github.com/hpapaxen/golicense/config"
-	"github.com/hpapaxen/golicense/license"
-	"github.com/hpapaxen/golicense/module"
+	"github.com/hpapaxen/glicense/config"
+	"github.com/hpapaxen/glicense/license"
+	"github.com/hpapaxen/glicense/module"
 )
 
 // XLSXOutput writes the results of license lookups to an XLSX file.

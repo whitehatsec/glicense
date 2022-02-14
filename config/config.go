@@ -3,7 +3,7 @@ package config
 import (
 	"strings"
 
-	"github.com/hpapaxen/golicense/license"
+	"github.com/hpapaxen/glicense/license"
 )
 
 // Config is the configuration structure for the license checker.

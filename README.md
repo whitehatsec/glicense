@@ -1,20 +1,20 @@
-# golicense - Go Binary OSS License Scanner
+# glicense - Go Binary OSS License Scanner
 
-golicense is a highly modified version of 
+glicense is a highly modified version of 
 [mitchellih/golicense](https://github.com/mitchellh/golicense) that scans 
 [compiled Go binaries](https://golang.org/) and can output all the dependencies,
 their versions, and their respective licenses (if known). This version of
-golicense scans project directories for `go.mod` files instead of scanning
+glicense scans project directories for `go.mod` files instead of scanning
 the final binary or binaries.
 
-golicense determines the dependency list quickly and with exact accuracy
+glicense determines the dependency list quickly and with exact accuracy
 since it uses metadata from the Go compiler to determine the _exact_ set of
 dependencies embedded in a compiled Go binary. This excludes dependencies that
 are not used in the final binary. For example, if a library depends on "foo"
 in function "F" but "F" is never called, then the dependency "foo" will not
 be present in the final binary.
 
-golicense is not meant to be a complete replacement for open source compliance
+glicense is not meant to be a complete replacement for open source compliance
 companies such as [FOSSA](https://fossa.io/) or
 [BlackDuck](https://www.blackducksoftware.com/black-duck-home), both of
 which provide hundreds of additional features related to open source
@@ -30,22 +30,22 @@ compliance.
 
 ## Installation
 
-To install `golicense`, download the appropriate release for your platform
-from the [releases page](https://github.com/hpapaxen/golicense/releases).
+To install `glicense`, download the appropriate release for your platform
+from the [releases page](https://github.com/hpapaxen/glicense/releases).
 
 You can also compile from source using Go 1.17 or later using standard
 `go build`.
 
 ## Usage
 
-`golicense` is used with one or two required arguments. In the one-argument
+`glicense` is used with one or two required arguments. In the one-argument
 form, the dependencies and their licenses are listed. In the two-argument
 form, a configuration file can be given to specify an allow/deny list of
 licenses and more.
 
 ```
-$ golicense [flags] [DIRECTORY]
-$ golicense [flags] [CONFIG] [DIRECTORY]
+$ glicense [flags] [DIRECTORY]
+$ glicense [flags] [CONFIG] [DIRECTORY]
 ```
 
 You may also pass mutliple binaries (but only if you are providing a CONFIG).
@@ -76,7 +76,7 @@ Supported configurations:
   * `deny` (`array<string>`) - A list of names or SPDX IDs of denied licenses.
   * `override` (`map<string, string>`) - A mapping of Go import identifiers
     to translate into a specific license by SPDX ID. This can be used to
-	set the license of imports that `golicense` cannot detect so that reports
+	set the license of imports that `glicense` cannot detect so that reports
 	pass.
   * `translate` (`map<string, string>`) - A mapping of Go import identifiers
     to translate into alternate import identifiers. Example:
@@ -86,7 +86,7 @@ Supported configurations:
 
 ### GitHub Authentication
 
-`golicense` uses the GitHub API to look up licenses. This doesn't require
+`glicense` uses the GitHub API to look up licenses. This doesn't require
 any authentication out of the box but will be severely rate limited.
 It is recommended that you generate a [personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) to increase the rate limit. The personal access token doesn't require any
 special access unless it needs to look at private repositories you have
@@ -95,7 +95,7 @@ Specify your token using the `GITHUB_TOKEN` environment variable.
 
 ```
 $ export GITHUB_TOKEN=abcd1234
-$ golicense ./binary
+$ glicense ./binary
 ```
 
 ### Excel (XLSX) Reporting Output
@@ -104,7 +104,7 @@ If the `-out-xlsx` flag is specified, then an Excel report is generated
 and written to the path specified in addition to the terminal output.
 
 ```
-$ golicense -out-xlsx=report.xlsx ./my-program
+$ glicense -out-xlsx=report.xlsx ./my-program
 ```
 
 The Excel report contains the list of dependencies, their versions, the
@@ -118,11 +118,11 @@ screenshot is shown below:
 
 ## Limitations
 
-There are a number of limitations to `golicense` currently. These are fixable
+There are a number of limitations to `glicense` currently. These are fixable
 but work hasn't been done to address these yet. If you feel like taking a stab
 at any of these, please do and contribute!
 
-**GitHub API:** The license detected by `golicense` may be incorrect if
-a GitHub project changes licenses. `golicense` uses the GitHub API which only
+**GitHub API:** The license detected by `glicense` may be incorrect if
+a GitHub project changes licenses. `glicense` uses the GitHub API which only
 returns the license currently detected; we can't lookup licenses for specific
 commit hashes.

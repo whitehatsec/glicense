@@ -14,14 +14,14 @@ import (
 	"github.com/google/go-github/v18/github"
 	"golang.org/x/oauth2"
 
-	"github.com/hpapaxen/golicense/config"
-	"github.com/hpapaxen/golicense/license"
-	githubFinder "github.com/hpapaxen/golicense/license/github"
-	"github.com/hpapaxen/golicense/license/golang"
-	"github.com/hpapaxen/golicense/license/gopkg"
-	"github.com/hpapaxen/golicense/license/mapper"
-	"github.com/hpapaxen/golicense/license/resolver"
-	"github.com/hpapaxen/golicense/module"
+	"github.com/hpapaxen/glicense/config"
+	"github.com/hpapaxen/glicense/license"
+	githubFinder "github.com/hpapaxen/glicense/license/github"
+	"github.com/hpapaxen/glicense/license/golang"
+	"github.com/hpapaxen/glicense/license/gopkg"
+	"github.com/hpapaxen/glicense/license/mapper"
+	"github.com/hpapaxen/glicense/license/resolver"
+	"github.com/hpapaxen/glicense/module"
 	"golang.org/x/mod/modfile"
 )
 
@@ -201,7 +201,7 @@ func printHelp(fs *flag.FlagSet) {
 }
 
 const help = `
-golicense analyzes the dependencies of a binary compiled from Go.
+glicense analyzes the dependencies of a binary compiled from Go.
 
 Usage: %[1]s [flags] [BINARY]
 Usage: %[1]s [flags] [CONFIG] [BINARY]
@@ -211,7 +211,7 @@ all the licenses of dependencies, or a configuration file and a binary
 which also notes which licenses are allowed among other settings.
 
 For full help text, see the README in the GitHub repository:
-http://github.com/hpapaxen/golicense
+http://github.com/hpapaxen/glicense
 
 Flags:
 

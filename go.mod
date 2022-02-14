@@ -1,4 +1,4 @@
-module github.com/hpapaxen/golicense
+module github.com/hpapaxen/glicense
 
 go 1.17
 
