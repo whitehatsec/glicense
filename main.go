@@ -10,6 +10,8 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/hpapaxen/glicense/output"
+
 	"github.com/fatih/color"
 	"github.com/google/go-github/v18/github"
 	"golang.org/x/oauth2"
@@ -35,7 +37,7 @@ func main() {
 }
 
 func realMain() int {
-	termOut := &TermOutput{Out: os.Stdout}
+	termOut := &output.TermOutput{Out: os.Stdout}
 
 	var flagLicense bool
 	var flagOutXLSX string
@@ -47,10 +49,15 @@ func realMain() int {
 	flags.BoolVar(&termOut.Verbose, "verbose", false, "additional logging to terminal, requires -plain")
 	flags.StringVar(&flagOutXLSX, "out-xlsx", "",
 		"save report in Excel XLSX format to the given path")
-	flags.Parse(os.Args[1:])
+	err := flags.Parse(os.Args[1:])
+	if err != nil {
+		printHelp(flags)
+		return 1
+	}
+
 	args := flags.Args()
 	if len(args) == 0 {
-		fmt.Fprintf(os.Stderr, color.RedString(
+		_, _ = fmt.Fprintf(os.Stderr, color.RedString(
 			"❗️ Path to directory to analyze expected.\n\n"))
 		printHelp(flags)
 		return 1
@@ -64,7 +71,7 @@ func realMain() int {
 
 		c, err := config.ParseFile(args[0])
 		if err != nil {
-			fmt.Fprintf(os.Stderr, color.RedString(fmt.Sprintf(
+			_, _ = fmt.Fprintf(os.Stderr, color.RedString(fmt.Sprintf(
 				"❗️ Error parsing configuration:\n\n%s\n", err)))
 			return 1
 		}
@@ -78,14 +85,14 @@ func realMain() int {
 		// Read the dependencies from the binary itself
 		bts, err := os.ReadFile(filepath.Join(dirPath, goMod))
 		if err != nil {
-			fmt.Fprintf(os.Stderr, color.RedString(fmt.Sprintf(
+			_, _ = fmt.Fprintf(os.Stderr, color.RedString(fmt.Sprintf(
 				"❗️ Error reading %q: %s\n", args[0], err)))
 			return 1
 		}
 
 		file, err := modfile.Parse(goMod, bts, nil)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, color.RedString(fmt.Sprintf(
+			_, _ = fmt.Fprintf(os.Stderr, color.RedString(fmt.Sprintf(
 				"❗️ Error reading %q: %s\n", args[0], err)))
 			return 1
 		}
@@ -110,9 +117,9 @@ func realMain() int {
 	termOut.Modules = mods
 
 	// Setup the outputs
-	out := &MultiOutput{Outputs: []Output{termOut}}
+	out := &output.MultiOutput{Outputs: []output.Output{termOut}}
 	if flagOutXLSX != "" {
-		out.Outputs = append(out.Outputs, &XLSXOutput{
+		out.Outputs = append(out.Outputs, &output.XLSXOutput{
 			Path:   flagOutXLSX,
 			Config: &cfg,
 		})
@@ -160,7 +167,7 @@ func realMain() int {
 			defer sem.Release()
 
 			// Build the context
-			ctx := license.StatusWithContext(ctx, StatusListener(out, &m))
+			ctx := license.StatusWithContext(ctx, output.StatusListener(out, &m))
 
 			// Lookup
 			out.Start(&m)
