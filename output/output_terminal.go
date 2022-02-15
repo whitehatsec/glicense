@@ -84,7 +84,7 @@ func (o *TermOutput) Update(m *module.Module, t license.StatusType, msg string) 
 		return
 	}
 
-	var colorFunc func(string, ...interface{}) string = fmt.Sprintf
+	var colorFunc = fmt.Sprintf
 	icon := iconNormal
 	switch t {
 	case license.StatusWarning:
@@ -109,7 +109,7 @@ func (o *TermOutput) Update(m *module.Module, t license.StatusType, msg string) 
 func (o *TermOutput) Finish(m *module.Module, l *license.License, err error) {
 	o.once.Do(o.init)
 
-	var colorFunc func(string, ...interface{}) string = fmt.Sprintf
+	var colorFunc = fmt.Sprintf
 	icon := iconNormal
 	if o.Config != nil {
 		state := o.Config.Allowed(l)

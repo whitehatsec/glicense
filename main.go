@@ -41,7 +41,11 @@ func realMain() int {
 
 	var flagLicense bool
 	var flagOutXLSX string
+	var flagOutCSV string
+	var flagIndirect bool
 	flags := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	flags.BoolVar(&flagIndirect, "indirect", false,
+		"include indirect dependencies in report")
 	flags.BoolVar(&flagLicense, "license", true,
 		"look up and verify license. If false, dependencies are\n"+
 			"printed without licenses.")
@@ -49,6 +53,8 @@ func realMain() int {
 	flags.BoolVar(&termOut.Verbose, "verbose", false, "additional logging to terminal, requires -plain")
 	flags.StringVar(&flagOutXLSX, "out-xlsx", "",
 		"save report in Excel XLSX format to the given path")
+	flags.StringVar(&flagOutCSV, "out-csv", "",
+		"save report in CSV format to the given path")
 	err := flags.Parse(os.Args[1:])
 	if err != nil {
 		printHelp(flags)
@@ -98,11 +104,11 @@ func realMain() int {
 		}
 
 		for _, require := range file.Require {
-			if require.Indirect {
+			if !flagIndirect && require.Indirect {
 				continue
 			}
 
-			mod := toModule(require)
+			mod := toModule(require, require.Indirect)
 			allMods[mod] = struct{}{}
 		}
 	}
@@ -121,6 +127,13 @@ func realMain() int {
 	if flagOutXLSX != "" {
 		out.Outputs = append(out.Outputs, &output.XLSXOutput{
 			Path:   flagOutXLSX,
+			Config: &cfg,
+		})
+	}
+
+	if flagOutCSV != "" {
+		out.Outputs = append(out.Outputs, &output.CSVOutput{
+			Path:   flagOutCSV,
 			Config: &cfg,
 		})
 	}
@@ -187,7 +200,7 @@ func realMain() int {
 
 	// Close the output
 	if err := out.Close(); err != nil {
-		fmt.Fprintf(os.Stderr, color.RedString(fmt.Sprintf(
+		_, _ = fmt.Fprintf(os.Stderr, color.RedString(fmt.Sprintf(
 			"❗️ Error: %s\n", err)))
 		return 1
 	}
@@ -195,10 +208,11 @@ func realMain() int {
 	return termOut.ExitCode()
 }
 
-func toModule(require *modfile.Require) module.Module {
+func toModule(require *modfile.Require, indirect bool) module.Module {
 	return module.Module{
-		Path:    require.Mod.Path,
-		Version: require.Mod.Version,
+		Path:     require.Mod.Path,
+		Version:  require.Mod.Version,
+		Indirect: indirect,
 	}
 }
 
@@ -210,12 +224,12 @@ func printHelp(fs *flag.FlagSet) {
 const help = `
 glicense analyzes the dependencies of a binary compiled from Go.
 
-Usage: %[1]s [flags] [BINARY]
-Usage: %[1]s [flags] [CONFIG] [BINARY]
+Usage: %[1]s [flags] [MODULE_DIR]
+Usage: %[1]s [flags] [CONFIG] [MODULE_DIR]
 
-One or two arguments can be given: a binary by itself which will output
-all the licenses of dependencies, or a configuration file and a binary
-which also notes which licenses are allowed among other settings.
+One or two arguments can be given: a go module directory by itself which will 
+output all the licenses of dependencies, or a configuration file and a module
+directory which also notes which licenses are allowed among other settings.
 
 For full help text, see the README in the GitHub repository:
 http://github.com/hpapaxen/glicense
