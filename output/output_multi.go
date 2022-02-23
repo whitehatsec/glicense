@@ -2,8 +2,8 @@ package output
 
 import (
 	"github.com/hashicorp/go-multierror"
-	"github.com/hpapaxen/glicense/license"
-	"github.com/hpapaxen/glicense/module"
+	"github.com/whitehatsec/glicense/license"
+	"github.com/whitehatsec/glicense/module"
 )
 
 // MultiOutput calls the functions of multiple Output implementations.

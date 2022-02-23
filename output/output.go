@@ -1,8 +1,8 @@
 package output
 
 import (
-	"github.com/hpapaxen/glicense/license"
-	"github.com/hpapaxen/glicense/module"
+	"github.com/whitehatsec/glicense/license"
+	"github.com/whitehatsec/glicense/module"
 )
 
 // Output represents the output format for the progress and completion

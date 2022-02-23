@@ -31,7 +31,7 @@ compliance.
 ## Installation
 
 To install `glicense`, download the appropriate release for your platform
-from the [releases page](https://github.com/hpapaxen/glicense/releases).
+from the [releases page](https://github.com/whitehatsec/glicense/releases).
 
 You can also compile from source using Go 1.17 or later using standard
 `go build`.
