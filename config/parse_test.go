@@ -6,16 +6,17 @@ import (
 	"testing"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/sebdah/goldie"
+	"github.com/sebdah/goldie/v2"
 	"github.com/stretchr/testify/require"
 )
 
 func init() {
-	goldie.FixtureDir = "testdata"
 	spew.Config.DisablePointerAddresses = true
 }
 
 func TestParseFile(t *testing.T) {
+	g := goldie.New(t)
+
 	f, err := os.Open("testdata")
 	require.NoError(t, err)
 	defer f.Close()
@@ -34,7 +35,7 @@ func TestParseFile(t *testing.T) {
 		t.Run(fi.Name(), func(t *testing.T) {
 			cfg, err := ParseFile(filepath.Join("testdata", fi.Name()))
 			require.NoError(t, err)
-			goldie.Assert(t, fi.Name(), []byte(spew.Sdump(cfg)))
+			g.Assert(t, fi.Name(), []byte(spew.Sdump(cfg)))
 		})
 	}
 }

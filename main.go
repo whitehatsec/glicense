@@ -10,20 +10,20 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/hpapaxen/glicense/output"
+	"github.com/whitehatsec/glicense/output"
 
 	"github.com/fatih/color"
 	"github.com/google/go-github/v18/github"
 	"golang.org/x/oauth2"
 
-	"github.com/hpapaxen/glicense/config"
-	"github.com/hpapaxen/glicense/license"
-	githubFinder "github.com/hpapaxen/glicense/license/github"
-	"github.com/hpapaxen/glicense/license/golang"
-	"github.com/hpapaxen/glicense/license/gopkg"
-	"github.com/hpapaxen/glicense/license/mapper"
-	"github.com/hpapaxen/glicense/license/resolver"
-	"github.com/hpapaxen/glicense/module"
+	"github.com/whitehatsec/glicense/config"
+	"github.com/whitehatsec/glicense/license"
+	githubFinder "github.com/whitehatsec/glicense/license/github"
+	"github.com/whitehatsec/glicense/license/golang"
+	"github.com/whitehatsec/glicense/license/gopkg"
+	"github.com/whitehatsec/glicense/license/mapper"
+	"github.com/whitehatsec/glicense/license/resolver"
+	"github.com/whitehatsec/glicense/module"
 	"golang.org/x/mod/modfile"
 )
 
@@ -232,7 +232,7 @@ output all the licenses of dependencies, or a configuration file and a module
 directory which also notes which licenses are allowed among other settings.
 
 For full help text, see the README in the GitHub repository:
-http://github.com/hpapaxen/glicense
+http://github.com/whitehatsec/glicense
 
 Flags:
 

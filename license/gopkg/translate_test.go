@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/hpapaxen/glicense/module"
 	"github.com/stretchr/testify/require"
+	"github.com/whitehatsec/glicense/module"
 )
 
 func TestTranslator(t *testing.T) {
